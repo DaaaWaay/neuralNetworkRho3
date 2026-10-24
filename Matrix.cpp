@@ -9,22 +9,42 @@
 
 
 #include "matrix.h"
+#include <cstdio>
 #include <cstdlib> // For rand() and RAND_MAX
 
-Matrix::Matrix()
+Matrix::Matrix()	// creates empty 0*0 matrix 
 {
-	//TODO: Initialize Empty Matrix
+	rows = 0;
+	col = 0;
+	data.clear();
+
+
 }
 
-Matrix::Matrix(vector<vector<double>> d)
+Matrix::Matrix(vector<vector<double>> d) // creates a matrix object with given data	
 {
-	//TODO: Initialize matrix with given values
+	data = d;
+	rows = data.size();
+	col = data[0].size();
+
 }
 
-Matrix::Matrix(int r, int c, bool isRandom)
+Matrix::Matrix(int r, int c, bool isRandom)	// creates a random matrix object of given size
 {
-	//TODO: Create matrix of size defined by r and c. 
-	// If isRandom is true, initialize with random number between 0.0 and 1.0
+	rows = r;
+	col = c;
+	data.resize(rows, vector<double>(col));
+	if (isRandom)
+	{
+		for (int i = 0; i < rows; i++)
+		{
+			for (int j = 0; j < col; j++)
+			{
+				data[i][j] = static_cast<double>(rand()) / RAND_MAX;			
+			}
+		}
+	}
+
 }
 
 int Matrix::getRows() const { return rows; }
@@ -33,43 +53,115 @@ vector<vector<double>> Matrix::getData() const { return data; }
 
 void Matrix::print_matrix() const
 {
-	//TODO: Prints the Matrix
+	for (int r = 0; r < rows; r++)
+	{
+		for (int c = 0; c < col; c++)
+		{
+			printf("%f", data[r][c]);
+		}
+		printf("\n");
+	}
 }
 
 Matrix Matrix::operator*(const Matrix& mat) const
 {
-	//TODO: Implement matrix multiplication
+	if (rows != mat.col)
+	{
+		throw invalid_argument("matrix multiplication dimentions not compatible");
+	}
+	vector<vector<double>> result(rows, vector<double>(mat.col));
+	for (int i = 0; i < rows; ++i)
+		{
+		for (int j = 0; j < mat.col; ++j)
+		{
+			for (int k = 0; k < col; ++k)
+			{
+				result[i][j] += data[i][k] * mat.data[k][j];
+			}
+		}
+		
+	}
 	return Matrix(result);
 }
 
 Matrix Matrix::operator+(const Matrix& mat) const
 {
-	//TODO: Implement matrix addition
+	if (rows != mat.rows || col != mat.col)
+	{
+		throw invalid_argument("matrix addition dimentions not compatible");
+	}
+	vector<vector<double>> result(rows, vector<double>(col));
+	for (int i = 0; i < rows; ++i)
+	{
+		for (int j = 0; j < col; ++j)
+		{
+			result[i][j] += data[i][j] + mat.data[i][j];	
+		}
+		
+	}
 	return Matrix(result);
 }
 
 Matrix Matrix::operator-(const Matrix& mat) const
 {
-	//TODO: Implement matrix subtraction
-	return Matrix(result);
+	if (rows != mat.rows || col != mat.col)
+	{
+		throw invalid_argument("matrix subtraction dimentions not compatible");
+	}
+		
+			
+	vector<vector<double>> result(rows, vector<double>(col));
+		for (int i = 0; i < rows; ++i)
+		{
+			for (int j = 0; j < col; ++j)
+			{
+				result[i][j] += data[i][j] - mat.data[i][j];	
+			}
+			
+		}
+		return Matrix(result);
 }
 
 Matrix Matrix::operator*(double num) const
 {
-	//TODO: Implement matrix scalar multiplication
+	vector<vector<double>> result(rows, vector<double>(col));
+	for (int i = 0; i < rows; ++i)
+	{
+		for (int j = 0; j < col; ++j)
+		{
+			result[i][j] += data[i][j] * num;	
+		}
+	}
 	return Matrix(result);
 }
 
 Matrix Matrix::transpose() const
 {
-	//TODO: Implement matrix transpose
+	vector<vector<double>> result_data(col, vector<double>(rows));
+	for (int i = 0; i < rows; ++i)
+    {
+        for (int j = 0; j < col; ++j)
+        {
+            result_data[j][i] = data[i][j];
+        }
+    }
 	return Matrix(result_data);
 }
 
 Matrix Matrix::element_multiply(const Matrix& mat) const
 {
-	//TODO: Implement element wise multiplication
-	// Hint: For element wise multiply, every element of matrix A(i, j) is multiplied to the corresponding element in matrix B (i, j).
-	//Therefore, A and B must be same size
+	if (rows != mat.rows || col != mat.col)
+	{
+		throw invalid_argument("matrix element multiplication dimentions not compatible");
+	}
+	vector<vector<double>> result_data(rows, vector<double>(col));
+	for (int i = 0; i < rows; ++i)
+	{
+		for (int j = 0; j < col; ++j)
+		{
+			result_data[i][j] += data[i][j] * mat.data[i][j];	
+		}
+		
+	}
 	return Matrix(result_data);
 }
