@@ -28,7 +28,11 @@ Layer::Layer() {}
 
 ANN::ANN(vector<int> sizes)
 {
-	//TODO: Populate the layers vector with the correctly sized Layers object as described by the input. 
+	layerSizes = sizes;
+	for (size_t i = 0; i + 1 < sizes.size(); ++i)
+    {
+        layers.emplace_back(sizes[i], sizes[i + 1]);
+    }
 }
 
 Matrix ANN::feedforward(Matrix input)
@@ -37,10 +41,14 @@ Matrix ANN::feedforward(Matrix input)
 	activations.push_back(input); //First activation layer is always the input
 	Matrix current_activation = input;
 	
-	// TODO: Iterate across all the layers, calculate the activations and use it as the input to the next layer. 
-
-	// Hint: You might want to use the sigmoid function... 
-	
+	for (size_t i = 0; i < layers.size(); ++i)
+	{
+		Matrix weighted_sum = layers[i].weights * current_activation;
+        weighted_sum = weighted_sum + layers[i].bias;
+        current_activation = nn_utils::sigmoid(weighted_sum);
+        activations.push_back(current_activation);
+	}
+		
 	return current_activation;
 }
 
