@@ -8,7 +8,7 @@
 */
 
 
-#include "matrix.h"
+#include "Matrix.h"
 #include <cstdio>
 #include <cstdlib> // For rand() and RAND_MAX
 
@@ -57,7 +57,7 @@ void Matrix::print_matrix() const
 	{
 		for (int c = 0; c < col; c++)
 		{
-			printf("%f", data[r][c]);
+			printf("%f ", data[r][c]);
 		}
 		printf("\n");
 	}
@@ -65,9 +65,9 @@ void Matrix::print_matrix() const
 
 Matrix Matrix::operator*(const Matrix& mat) const
 {
-	if (rows != mat.col)
+	if (col != mat.rows)
 	{
-		throw invalid_argument("matrix multiplication dimentions not compatible");
+		throw invalid_argument("matrix multiplication dimensions not compatible");
 	}
 	vector<vector<double>> result(rows, vector<double>(mat.col));
 	for (int i = 0; i < rows; ++i)
