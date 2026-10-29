@@ -65,7 +65,7 @@ double ANN::update(Matrix target, double training_rate)
 
 	Matrix delta = error.element_multiply(nn_utils::dsigmoid(activations.back()));
 
-	for (size_t i = layers.size() ; i >= 0; i--)
+	for (int i = static_cast<int>(layers.size()) - 1; i >= 0; --i)
 	{
 		Matrix previousDelta;
 		Matrix weightGradient = delta * activations[i].transpose();

@@ -11,6 +11,7 @@
 #include "Matrix.h"
 #include <cstdio>
 #include <cstdlib> // For rand() and RAND_MAX
+using namespace std;
 
 Matrix::Matrix()	// creates empty 0*0 matrix 
 {
@@ -57,9 +58,9 @@ void Matrix::print_matrix() const
 	{
 		for (int c = 0; c < col; c++)
 		{
-			printf("%f ", data[r][c]);
+			cout<< std::setprecision(2) << data[r][c];
 		}
-		printf("\n");
+		cout << " " ;
 	}
 }
 
