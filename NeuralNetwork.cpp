@@ -43,10 +43,10 @@ Matrix ANN::feedforward(Matrix input)
 	
 	for (size_t i = 0; i < layers.size(); ++i)
 	{
-		Matrix weighted_sum = layers[i].weights * current_activation;
-        weighted_sum = weighted_sum + layers[i].bias;
-        current_activation = nn_utils::sigmoid(weighted_sum);
-        activations.push_back(current_activation);
+		Matrix weighted_sum = layers[i].weights * current_activation;	//applies the weigts matrix from each layer
+        weighted_sum = weighted_sum + layers[i].bias;					//applies the bias from each layer
+        current_activation = nn_utils::sigmoid(weighted_sum);			//aplies non linear sigmoid function
+        activations.push_back(current_activation);						
 	}
 		
 	return current_activation;
@@ -54,11 +54,37 @@ Matrix ANN::feedforward(Matrix input)
 
 double ANN::update(Matrix target, double training_rate)
 {
-	//TODO: Read and understand section 3.3
-	// Complete this function based on instructions from section 3.3
+	Matrix error = activations.back() - target;
+	float absError = 0;
+	for (int i = 0; i < error.getRows(); i++)
+	{
+		absError += abs(error.data[i][0]);
+	}
 
+	// backwars part
+
+	Matrix delta = error.element_multiply(nn_utils::dsigmoid(activations.back()));
+
+	for (size_t i = layers.size() ; i >= 0; i--)
+	{
+		Matrix previousDelta;
+		Matrix weightGradient = delta * activations[i].transpose();
+		if (i > 0)
+		{
+			previousDelta =(layers[i].weights.transpose() * delta).element_multiply(nn_utils::dsigmoid(activations[i]));
+		}
+		
+        layers[i].weights = layers[i].weights - weightGradient * training_rate;		//twiddling knobs
+
+        layers[i].bias = layers[i].bias - delta * training_rate;
+
+        if (i > 0)
+        {
+            delta = previousDelta;
+        }
+	}
 	
-	return absError;
+	return absError;	
 }
 
 
