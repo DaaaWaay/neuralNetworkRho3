@@ -42,6 +42,7 @@ public:
 	ANN(vector<int> sizes);
 	Matrix feedforward(Matrix input);
 	double update(Matrix target, double training_rate);
+	void saveWeights(const string& filename) const;
 };
 
 

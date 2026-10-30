@@ -2,7 +2,8 @@
 #include "NeuralNetwork.h"
 #include "Matrix.cpp"
 #include "Matrix.h"
-
+#include <iostream>
+#include <fstream> 
 #include <stdio.h>
 #include <math.h>
 
@@ -60,5 +61,6 @@ int main()
             output.print_matrix();
             cout << " | " << nn_utils::argmax(output) << endl;
         }
+     ofstream MyFile("weights.txt");
 
 }

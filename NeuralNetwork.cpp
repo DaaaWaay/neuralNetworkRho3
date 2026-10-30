@@ -9,7 +9,8 @@
 
 
 #include "NeuralNetwork.h"
-#include <cmath>      
+#include <cmath>
+#include <fstream>
 
 using namespace std;
 
@@ -85,6 +86,40 @@ double ANN::update(Matrix target, double training_rate)
 	}
 	
 	return absError;	
+}
+
+void ANN::saveWeights(const string& filename) const
+{
+	ofstream out(filename);
+	if (!out.is_open())
+	{
+		throw runtime_error("Unable to open weights file: " + filename);
+	}
+
+	for (size_t i = 0; i < layers.size(); ++i)
+	{
+		out << "Layer " << i << " weights\n";
+		for (int r = 0; r < layers[i].weights.getRows(); ++r)
+		{
+			for (int c = 0; c < layers[i].weights.getCol(); ++c)
+			{
+				out << layers[i].weights.data[r][c] << " ";
+			}
+			out << "\n";
+		}
+
+		out << "Layer " << i << " bias\n";
+		for (int r = 0; r < layers[i].bias.getRows(); ++r)
+		{
+			for (int c = 0; c < layers[i].bias.getCol(); ++c)
+			{
+				out << layers[i].bias.data[r][c] << " ";
+			}
+			out << "\n";
+		}
+	}
+
+	out.close();
 }
 
 
