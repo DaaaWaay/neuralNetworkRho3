@@ -34,12 +34,12 @@ vector<vector<double>> loadCSV(const string& filename) {
 int main()
 {
     cout <<"temp"<<endl;
-    ANN neuralNetwork({785, 128, 64, 16, 1});      
+    ANN neuralNetwork({785, 128, 64, 10});      
     int maxEppoc = 100;
     int trainingRate = 1;
-    vector<vector<double>> trainingData = loadCSV("fashion-mnist_train.csv");
+    vector<vector<double>> trainingData = loadCSV("fashion-mnist_test.csv");
 
-    for (int i = 0; i < trainingData.size(); i ++)
+    for (int i = 0; i < trainingData.size(); i += 5)
     {
         vector<double> inputVecor = trainingData[i];
         vector<vector<double>> inputData(inputVecor.size(), vector<double>(1));
@@ -48,10 +48,18 @@ int main()
         {
             inputData[j][0] = inputVecor[j];
         }
-        vector<vector<double>> targetData(1, vector<double>(1));
-        targetData[0][0] = trainingData[i][0];
-        Matrix target(targetData);
+        vector<vector<double>> tempTarget; 
+        for (int hot = 0; hot < 10; hot++)
+        {
+            if (hot = trainingData[i][0])
+            {
+                tempTarget[hot][0] = 1;
+            }
+        }
+
+        Matrix target(tempTarget);
         Matrix input(inputData);
+        input = input * (1/256);                                                    //normalise input data to between 0-1 instead of 0-256
         Matrix output(neuralNetwork.feedforward(input));
         neuralNetwork.update(target, 1);
         cout <<"trained line" << i << endl;
