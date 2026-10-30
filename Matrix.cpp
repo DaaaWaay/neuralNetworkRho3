@@ -41,7 +41,7 @@ Matrix::Matrix(int r, int c, bool isRandom)	// creates a random matrix object of
 		{
 			for (int j = 0; j < col; j++)
 			{
-				data[i][j] = static_cast<double>(rand()) / RAND_MAX;			
+				data[i][j] = (static_cast<double>(rand()) / RAND_MAX) * (1.0 / sqrt(785));			
 			}
 		}
 	}

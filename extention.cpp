@@ -38,7 +38,7 @@ int main()
     cout <<"temp"<<endl;
     ANN neuralNetwork({785, 128, 64, 10});      
     int trainingRate = 1;
-    vector<vector<double>> trainingData = loadCSV("fashion-mnist_test.csv");
+    vector<vector<double>> trainingData = loadCSV("fashion-mnist_train.csv");
 
     for (int i = 0; i < trainingData.size(); i ++)
     {   
@@ -46,10 +46,11 @@ int main()
         vector<double> inputVecor = trainingData[i];
         vector<vector<double>> inputData(inputVecor.size(), vector<double>(1));
 
-        for (size_t j = 1; j < inputVecor.size(); ++j)
+        for (size_t j = 1; j < inputVecor.size(); j++)
         {
             inputData[j][0] = inputVecor[j];
         }
+
         //cout << "here 0" << endl;
         vector<vector<double>> tempTarget(10, vector<double>(1, 0.0));
         for (int hot = 0; hot < 10; hot++)
@@ -58,17 +59,29 @@ int main()
             {
                 tempTarget[hot][0] = 1;
             }
+            else
+            {
+                tempTarget[hot][0] = 0;
+            }
         }
         //cout << "here 1" << endl;
         Matrix target(tempTarget);
+        
+        
+        cout << endl;
+
         //cout << "here 2" << endl;
         Matrix input(inputData);
         //cout << "here 3" << endl;
-        input = input * (1/256); 
-        //cout << "here 4" << endl;                                                   //normalise input data to between 0-1 instead of 0-256
+        input = input * (1.0/256); 
+        //cout << "here 4" << endl;                          //normalise input data to between 0-1 instead of 0-256
         Matrix output(neuralNetwork.feedforward(input));
         //cout << "here 5" << endl;
         neuralNetwork.update(target, 1);
+        
+        target.print_matrix();
+        output.print_matrix();
+        cout << endl;
         //cout <<"trained line" << i << endl;
     }
 
@@ -90,6 +103,7 @@ int main()
         targetData[0][0] = testingData[i][0];
         Matrix target(targetData);
         Matrix input(inputData);
+        input = input * (1.0/256); 
         Matrix output(neuralNetwork.feedforward(input));
         
         cout << targetData[0][0] << " ";
