@@ -16,7 +16,7 @@ vector<vector<double>> loadCSV(const string& filename) {
     vector<vector<double>> data;
     ifstream file(filename);
     string line;
- 
+    
     while (getline(file, line)) {
         replace(line.begin(), line.end(), ',', ' ');  // commas -> spaces
         istringstream ss(line);
@@ -26,7 +26,9 @@ vector<vector<double>> loadCSV(const string& filename) {
         while (ss >> x) row.push_back(x);
  
         if (!row.empty()) data.push_back(row);  // skip blank lines
+        cout << "its doing something" << endl;
     }
+    cout << "done innit" << endl;
     return data;
 }
 
@@ -35,12 +37,12 @@ int main()
 {
     cout <<"temp"<<endl;
     ANN neuralNetwork({785, 128, 64, 10});      
-    int maxEppoc = 100;
     int trainingRate = 1;
     vector<vector<double>> trainingData = loadCSV("fashion-mnist_test.csv");
 
-    for (int i = 0; i < trainingData.size(); i += 5)
-    {
+    for (int i = 0; i < trainingData.size(); i ++)
+    {   
+        //cout << "started train line" << endl;
         vector<double> inputVecor = trainingData[i];
         vector<vector<double>> inputData(inputVecor.size(), vector<double>(1));
 
@@ -48,21 +50,26 @@ int main()
         {
             inputData[j][0] = inputVecor[j];
         }
-        vector<vector<double>> tempTarget; 
+        //cout << "here 0" << endl;
+        vector<vector<double>> tempTarget(10, vector<double>(1, 0.0));
         for (int hot = 0; hot < 10; hot++)
         {
-            if (hot = trainingData[i][0])
+            if (hot == trainingData[i][0])
             {
                 tempTarget[hot][0] = 1;
             }
         }
-
+        //cout << "here 1" << endl;
         Matrix target(tempTarget);
+        //cout << "here 2" << endl;
         Matrix input(inputData);
-        input = input * (1/256);                                                    //normalise input data to between 0-1 instead of 0-256
+        //cout << "here 3" << endl;
+        input = input * (1/256); 
+        //cout << "here 4" << endl;                                                   //normalise input data to between 0-1 instead of 0-256
         Matrix output(neuralNetwork.feedforward(input));
+        //cout << "here 5" << endl;
         neuralNetwork.update(target, 1);
-        cout <<"trained line" << i << endl;
+        //cout <<"trained line" << i << endl;
     }
 
     neuralNetwork.saveWeights("weights.txt");
@@ -87,6 +94,6 @@ int main()
         
         cout << targetData[0][0] << " ";
         output.print_matrix();
-        cout << " " <<endl;
+        cout << " | " << nn_utils::argmax(output) << endl; 
     }
 }
