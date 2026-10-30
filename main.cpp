@@ -61,6 +61,7 @@ int main()
             output.print_matrix();
             cout << " | " << nn_utils::argmax(output) << endl;
         }
-     ofstream MyFile("weights.txt");
+    neuralNetwork.saveWeights("basicWeights.txt");
+
 
 }
